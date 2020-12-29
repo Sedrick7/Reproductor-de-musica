@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import filedialog
 import pygame 
 import time
+from mutagen.mp3 import MP3 
+
 
 # Function to add songs to the playlist#
 def add_songs():
