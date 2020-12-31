@@ -4,14 +4,14 @@ from tkinter import filedialog
 import pygame 
 import time
 from mutagen.mp3 import MP3 
-
+import tkinter.ttk as ttk
 
 # Function to add songs to the playlist#
 def add_songs():
     songs = filedialog.askopenfilenames(initialdir='music/', title='Escoge una cancion', filetypes=(('Archivos mp3', '*.mp3'), ('Archivos wav', '*.wav')))
 
     for song in songs:
-        song = song.replace('C:/Users/javie/Desktop/Python/Music Player/Music/', '')
+        song = song.replace('C:/Users/javie/Desktop/Python/Music Player/music/', '')
         song = song.replace('.mp3', '')
 
         song_box.insert(END, song)
@@ -38,7 +38,7 @@ def prv_sng():
     prv_song = prv_song[0]-1
 
     song = song_box.get(prv_song)
-    song = f'C:/Users/javie/Desktop/Python/Music Player/Music/{song}.mp3'
+    song = f'C:/Users/javie/Desktop/Python/Music Player/music/{song}.mp3'
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
@@ -54,7 +54,7 @@ def nxt_sng():
     next_song = next_song[0]+1
 
     song = song_box.get(next_song)
-    song = f'C:/Users/javie/Desktop/Python/Music Player/Music/{song}.mp3'
+    song = f'C:/Users/javie/Desktop/Python/Music Player/music/{song}.mp3'
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
@@ -69,7 +69,7 @@ def nxt_sng():
 # Play Function #
 def Play():
     song = song_box.get(ACTIVE)
-    song = f'C:/Users/javie/Desktop/Python/Music Player/Music/{song}.mp3'
+    song = f'C:/Users/javie/Desktop/Python/Music Player/music/{song}.mp3'
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
@@ -103,17 +103,31 @@ def Stop():
     pygame.mixer.music.stop()
     song_box.selection_clear(ACTIVE)
 
+    timeline.config(text='')
+
 
 # Song timeline #
 def play_time():
     current_time = pygame.mixer.music.get_pos()/1000
     
     # time in minutes#
-    min_time = time.strftime('%M:S', time.gmtime(current_time))
+    min_time = time.strftime('%M:%S', time.gmtime(current_time))
     
-    timeline.config(text=min_time)
+    # Song currently playing #
+    #current_song = song_box.curselection()
+    song = song_box.get(ACTIVE)
+    song = f'C:/Users/javie/Desktop/Python/Music Player/music/{song}.mp3'
+    
+    # song lenght #
+    song_mut = MP3(song)
+    song_lenght = song_mut.info.length
+    # convert time #
+    converted_song_lenght = time.strftime('%M:%S', time.gmtime(song_lenght))
+
+    timeline.config(text = f'Tiempo transcurrido: {min_time} de {converted_song_lenght}   ')
 
     timeline.after(1000, play_time)
+
 
 
 
